@@ -1,0 +1,63 @@
+version: '3.4'
+
+services:
+  ipverification:
+    image: ${DOCKER_REGISTRY-}ipverification
+    container_name: ipverification
+    build:
+      context: .
+      dockerfile: APIGateways/IPVerification/Dockerfile
+      target: debug-run
+    ports:
+       - '55020:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - 'ASPNETCORE_URLS=http://0.0.0.0:80'
+    networks:
+      - sceneca-practical_default
+  geoipservice.api:
+    image: ${DOCKER_REGISTRY-}geoipserviceapi
+    container_name: geoipservice
+    build:
+      context: .
+      dockerfile: Services/GeoIP/GeoIPService.API/Dockerfile
+      target: debug-run
+    ports:
+       - '55024:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - 'ASPNETCORE_URLS=http://0.0.0.0:80'
+    networks:
+      - sceneca-practical_default
+  rdapservice.api:
+    image: ${DOCKER_REGISTRY-}rdapserviceapi
+    container_name: rdapservice
+    build:
+      context: .
+      dockerfile: Services/RDAP/RDAPService.API/Dockerfile
+      target: debug-run
+    ports:
+       - '55025:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - 'ASPNETCORE_URLS=http://0.0.0.0:80'
+    networks:
+      - sceneca-practical_default
+  reversednsservice.api:
+    image: ${DOCKER_REGISTRY-}reversednsserviceapi
+    container_name: reversednsservice
+    build:
+      context: .
+      dockerfile: Services/ReverseDNS/ReverseDnsService.API/Dockerfile
+      target: debug-run
+    ports:
+       - '55026:80'
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - 'ASPNETCORE_URLS=http://0.0.0.0:80'
+    networks:
+      - sceneca-practical_default
+networks:
+  sceneca-practical_default:
+    external: true
+
