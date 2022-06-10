@@ -1,8 +1,11 @@
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.OpenApi.Models;
 using IPVerification.Services;
 using IPVerification.Services.GeoIPService;
 using IPVerification.Services.RDAPService;
 using IPVerification.Services.ReverseDNS;
 using IPVerification.Services.PingService;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +33,23 @@ builder.Services.AddHttpClient("ConfiguredHttpMessageHandler")
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "IP Specifications API",
+        Description = "An ASP.NET Core Web API for identifying IP details"
+    });
+    options.ExampleFilters();
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename)); 
+});
+
+builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
+
 
 var app = builder.Build();
 
