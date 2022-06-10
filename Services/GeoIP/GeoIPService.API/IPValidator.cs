@@ -1,41 +1,28 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 namespace GeoIPService.API
 {
     public static class IPValidator
     {
-        public static bool ValidateIP(string IpAddress)
+        private static readonly Regex validIpV4AddressRegex = new Regex(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", RegexOptions.IgnoreCase);
+        public static bool ValidateIP(string ipAddress)
         {
-            bool flag = false;
             try
-            {               
-                string IPv = string.Empty;
-                IPAddress address;
-                if (!string.IsNullOrEmpty(IpAddress))
+            {
+                if (validIpV4AddressRegex.IsMatch(ipAddress.Trim()))
+                    return true;
+
+                IPAddress ip;
+                if (IPAddress.TryParse(ipAddress, out ip))
                 {
-                    if (IpAddress.Count(c => c == '.') == 3)
-                    {
-                        flag = IPAddress.TryParse(IpAddress, out address);
-                        IPv = "IPv4";
-                    }
-                    else if (IpAddress.Contains(':'))
-                    {
-                        if (IPAddress.TryParse(IpAddress, out address))
-                        {
-                            flag = address.AddressFamily == AddressFamily.InterNetworkV6;
-                        }
-                        IPv = "IPv6";
-                    }
-                    else
-                    {
-                        IPv = "Version of";
-                        flag = false;
-                    }
-                }                
+                    if (ip.AddressFamily == AddressFamily.InterNetworkV6)
+                        return true;
+                }
             }
             catch (Exception) { }
-            return flag;
+            return false;
         }
     }
 }

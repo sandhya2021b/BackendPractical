@@ -4,6 +4,7 @@ using IPVerification.Services.RDAPService;
 using IPVerification.Services.ReverseDNS;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 namespace IPVerification.Services
 {
@@ -13,6 +14,7 @@ namespace IPVerification.Services
         private readonly IRDAPService _rdapService;
         private readonly IReverseDnsService _reverseDnsService;
         private readonly PingService.PingService _pingService;
+        private static readonly Regex validIpV4AddressRegex = new Regex(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", RegexOptions.IgnoreCase);
         public IPVerificationService(IGeoIPService geoIPService, IRDAPService rdapService, IReverseDnsService reverseDnsService, PingService.PingService pingService)
         {
             _geoIPService = geoIPService ?? throw new ArgumentNullException(nameof(geoIPService));
@@ -21,36 +23,21 @@ namespace IPVerification.Services
             _pingService = pingService ?? throw new ArgumentNullException(nameof(pingService)); ;
         }
         public async Task<bool> IsValidIpAddress(string ipAddress)
-        {
-            bool flag = false;
+        { 
             try
             {
-                string IPv = string.Empty;
-                IPAddress address;
-                if (!string.IsNullOrEmpty(ipAddress))
+                if (validIpV4AddressRegex.IsMatch(ipAddress.Trim()))
+                    return true;
+
+                IPAddress ip;
+                if(IPAddress.TryParse(ipAddress, out ip))
                 {
-                    if (ipAddress.Count(c => c == '.') == 3)
-                    {
-                        flag = IPAddress.TryParse(ipAddress, out address);
-                        IPv = "IPv4";
-                    }
-                    else if (ipAddress.Contains(':'))
-                    {
-                        if (IPAddress.TryParse(ipAddress, out address))
-                        {
-                            flag = address.AddressFamily == AddressFamily.InterNetworkV6;
-                        }
-                        IPv = "IPv6";
-                    }
-                    else
-                    {
-                        IPv = "Version of";
-                        flag = false;
-                    }
+                    if(ip.AddressFamily == AddressFamily.InterNetworkV6)
+                        return true;
                 }
             }
             catch (Exception) { }
-            return flag;
+            return false;
         }
 
         public bool IsValidDomainName(string domainName)

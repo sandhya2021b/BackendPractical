@@ -2,6 +2,7 @@
 using ReverseDnsService.API.Services.Models;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 
 namespace ReverseDnsService.API.Services.HackerTarget
 {
@@ -10,6 +11,7 @@ namespace ReverseDnsService.API.Services.HackerTarget
         private readonly IConfiguration _configuration;
         private readonly HackerTargetServiceConfiguration _hackerTargetServiceServiceConfiguration;
         private readonly ILogger<HackerTargetService> _logger;
+        private static readonly Regex validIpV4AddressRegex = new Regex(@"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$", RegexOptions.IgnoreCase);
         public HackerTargetService(IConfiguration configuration, HttpClient client, ILogger<HackerTargetService> logger) : base(client, logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -18,35 +20,20 @@ namespace ReverseDnsService.API.Services.HackerTarget
         }
         public async Task<bool> IsValidIpAddress(string ipAddress)
         {
-            bool flag = false;
             try
             {
-                string IPv = string.Empty;
-                IPAddress address;
-                if (!string.IsNullOrEmpty(ipAddress))
+                if (validIpV4AddressRegex.IsMatch(ipAddress.Trim()))
+                    return true;
+
+                IPAddress ip;
+                if (IPAddress.TryParse(ipAddress, out ip))
                 {
-                    if (ipAddress.Count(c => c == '.') == 3)
-                    {
-                        flag = IPAddress.TryParse(ipAddress, out address);
-                        IPv = "IPv4";
-                    }
-                    else if (ipAddress.Contains(':'))
-                    {
-                        if (IPAddress.TryParse(ipAddress, out address))
-                        {
-                            flag = address.AddressFamily == AddressFamily.InterNetworkV6;
-                        }
-                        IPv = "IPv6";
-                    }
-                    else
-                    {
-                        IPv = "Version of";
-                        flag = false;
-                    }
+                    if (ip.AddressFamily == AddressFamily.InterNetworkV6)
+                        return true;
                 }
             }
             catch (Exception) { }
-            return flag;
+            return false;
         }
         public async Task<DNSResponse> GetDnsFromHackerTarget(string ipAddress)
         {
