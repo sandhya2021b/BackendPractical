@@ -16,19 +16,34 @@ namespace IPVerification.Controllers
             _ipVerificationService = iPVerificationService ?? throw new ArgumentNullException(nameof(iPVerificationService));
         }
 
+        /// <summary>
+        /// Gets details of Geolocation, PingStatus, ReverseDNS, RDAP for given IpAddress
+        /// </summary>
+        /// <response code="200">Gets Geolocation, PingStatus, ReverseDNS, RDAP for given IpAddress</response>
+        /// <response code="400">Failed to fetch details for the input provided</response>
         [HttpPost]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(VerificationResponseModel), statusCode:200)]
+        [ProducesResponseType((typeof(ErrorResponse)), statusCode:400)]
         public async Task<ActionResult<VerificationResponseModel>> GetDetails([FromBody] VerificationInputModel input)
         {
             if(input == null || (string.IsNullOrEmpty(input.IpAdderss) && string.IsNullOrEmpty(input.DomainName)))
-                return BadRequest("Invalid input");
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = new List<ErrorModel> { new ErrorModel {Message = "Invalid input" } }
+                });
 
             if (!string.IsNullOrEmpty(input.IpAdderss) && !_ipVerificationService.IsValidIpAddress(input.IpAdderss).Result)
-                return BadRequest("Invalid input IP Address");
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = new List<ErrorModel> { new ErrorModel { Message = "Invalid input IP Address" } }
+                });            
 
             if (!string.IsNullOrEmpty(input.DomainName) && !_ipVerificationService.IsValidDomainName(input.DomainName).Result)
-                return BadRequest("Invalid input domain name");
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = new List<ErrorModel> { new ErrorModel { Message = "Invalid input domain name" } }
+                }); 
 
             var response = await _ipVerificationService.GetIpDetails(ipAddress: input.IpAdderss, domainName: input.DomainName);
 
