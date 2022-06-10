@@ -1,10 +1,9 @@
 ﻿using IPVerification.Services.GeoIPService;
+using IPVerification.Services.Models;
 using IPVerification.Services.RDAPService;
 using IPVerification.Services.ReverseDNS;
-using IPVerification.Services.PingService;
 using System.Net;
 using System.Net.Sockets;
-using IPVerification.Services.Models;
 
 namespace IPVerification.Services
 {
@@ -14,8 +13,7 @@ namespace IPVerification.Services
         private readonly IRDAPService _rdapService;
         private readonly IReverseDnsService _reverseDnsService;
         private readonly PingService.PingService _pingService;
-        public IPVerificationService(IGeoIPService geoIPService, IRDAPService rdapService,
-            IReverseDnsService reverseDnsService, PingService.PingService pingService)
+        public IPVerificationService(IGeoIPService geoIPService, IRDAPService rdapService, IReverseDnsService reverseDnsService, PingService.PingService pingService)
         {
             _geoIPService = geoIPService ?? throw new ArgumentNullException(nameof(geoIPService));
             _rdapService = rdapService ?? throw new ArgumentNullException(nameof(rdapService));
@@ -58,10 +56,10 @@ namespace IPVerification.Services
         public bool IsValidDomainName(string domainName)
         {
             bool isDomainExist = false;
-            System.Net.IPHostEntry host;
+            IPHostEntry host;
             try
             {
-                host = System.Net.Dns.GetHostEntry(domainName);
+                host = Dns.GetHostEntry(domainName);
                 if (host != null)
                 {
                     isDomainExist = true;
@@ -74,7 +72,6 @@ namespace IPVerification.Services
                     isDomainExist = false;
                 }
             }
-
             return isDomainExist;
         }
         public async Task<VerificationResponseModel> GetIpDetails(string ipAddress, string domainName)

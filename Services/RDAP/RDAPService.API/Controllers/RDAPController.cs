@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RDAPService.API.Services;
 using RDAPService.API.Services.Verisign;
 using RDAPService.API.Services.Verisign.Models;
@@ -58,7 +57,6 @@ namespace RDAPService.API.Controllers
                     isDomainExist = false;
                 }
             }
-
             return isDomainExist;
         }
     }

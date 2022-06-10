@@ -1,5 +1,4 @@
-﻿using IpInfo;
-using GeoIPService.API.Services.Models;
+﻿using GeoIPService.API.Services.Models;
 
 namespace GeoIPService.API.Services.IPinfo
 {

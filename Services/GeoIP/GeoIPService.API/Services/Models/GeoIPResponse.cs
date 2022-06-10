@@ -12,6 +12,5 @@
         public string? Postal { get; set; }
         public string? Timezone { get; set; }
         public string? Org { get; set; }
-
     }
 }

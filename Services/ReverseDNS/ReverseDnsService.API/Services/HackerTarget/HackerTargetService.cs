@@ -10,9 +10,7 @@ namespace ReverseDnsService.API.Services.HackerTarget
         private readonly IConfiguration _configuration;
         private readonly HackerTargetServiceConfiguration _hackerTargetServiceServiceConfiguration;
         private readonly ILogger<HackerTargetService> _logger;
-        public HackerTargetService(IConfiguration configuration,
-            System.Net.Http.HttpClient client,
-            ILogger<HackerTargetService> logger) : base(client, logger)
+        public HackerTargetService(IConfiguration configuration, HttpClient client, ILogger<HackerTargetService> logger) : base(client, logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

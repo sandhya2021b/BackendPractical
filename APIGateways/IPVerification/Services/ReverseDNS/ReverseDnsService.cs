@@ -8,9 +8,7 @@ namespace IPVerification.Services.ReverseDNS
         private readonly IConfiguration _configuration;
         private readonly ReverseDnsServiceConfiguration _reverseDnsServiceConfiguration;
         private readonly ILogger<ReverseDnsService> _logger;
-        public ReverseDnsService(IConfiguration configuration,
-            System.Net.Http.HttpClient client,
-            ILogger<ReverseDnsService> logger) : base(client, logger)
+        public ReverseDnsService(IConfiguration configuration, HttpClient client, ILogger<ReverseDnsService> logger) : base(client, logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

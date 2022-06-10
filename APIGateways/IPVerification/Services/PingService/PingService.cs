@@ -9,7 +9,6 @@ namespace IPVerification.Services.PingService
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         public async Task<bool> PingHost(string nameOrAddress)
         {
             bool pingable = false;
@@ -23,10 +22,8 @@ namespace IPVerification.Services.PingService
             }
             catch (PingException ex)
             {
-                
                 _logger.LogError($"Error occcurred while executing [{nameof(PingService)}] [{nameof(PingHost)}] method. " +
-                    $"ERROR MESSAGE:{ex.Message} INNER EXCEPTION: {ex.InnerException?.Message} STACKTRACE: {ex.StackTrace}");
-            
+                    $"ERROR MESSAGE:{ex.Message} INNER EXCEPTION: {ex.InnerException?.Message} STACKTRACE: {ex.StackTrace}");            
             }
             finally
             {
@@ -35,7 +32,6 @@ namespace IPVerification.Services.PingService
                     pinger.Dispose();
                 }
             }
-
             return pingable;
         }
     }

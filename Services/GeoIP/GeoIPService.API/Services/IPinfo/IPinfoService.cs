@@ -13,7 +13,6 @@ namespace GeoIPService.API.Services.IPinfo
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         public async Task<GeoIPResponse> GetGeoIP(string ipAddress)
         {
             try
@@ -29,10 +28,8 @@ namespace GeoIPService.API.Services.IPinfo
             {
                 _logger.LogError($"Error occcurred while executing [{nameof(IPinfoService)}] [{nameof(GetGeoIP)}] method. " +
                     $"ERROR MESSAGE:{ex.Message} INNER EXCEPTION: {ex.InnerException?.Message} STACKTRACE: {ex.StackTrace}");
-
             }
             return new GeoIPResponse();
-        }
-        
+        }        
     }
 }

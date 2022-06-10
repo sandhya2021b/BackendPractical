@@ -1,7 +1,6 @@
 ﻿using IPVerification.Configuration;
 using IPVerification.Services.Models;
 
-
 namespace IPVerification.Services.RDAPService
 {
     public class RDAPService : HttpService, IRDAPService
@@ -9,10 +8,7 @@ namespace IPVerification.Services.RDAPService
         private readonly IConfiguration _configuration;
         private readonly RDAPServiceConfiguration _rdapServiceConfiguration;
         private readonly ILogger<RDAPService> _logger;
-
-        public RDAPService(IConfiguration configuration,
-           System.Net.Http.HttpClient client,
-           ILogger<RDAPService> logger) : base(client, logger)
+        public RDAPService(IConfiguration configuration, HttpClient client, ILogger<RDAPService> logger) : base(client, logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

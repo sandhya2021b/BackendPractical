@@ -13,7 +13,6 @@ namespace IPVerification.Services
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         protected async Task<T> Get<T>(string endpoint, string token = null)
         {
             try
@@ -35,7 +34,6 @@ namespace IPVerification.Services
                 _logger.LogError($"Error while executing request {HttpMethod.Get} {_client.BaseAddress + endpoint} - Exception {ex.Message} - Inner exception {ex.InnerException?.Message}");
                 throw;
             }
-
             return default(T);
         }
         private Uri GetRequestUrl(string endpoint)
@@ -49,7 +47,6 @@ namespace IPVerification.Services
                 return new Uri(_client.BaseAddress + endpoint);
             }
         }
-
         private async Task<HttpResponseMessage> Execute(HttpRequestMessage request, string token = null)
         {
             request.SetPolicyExecutionContext(new Context(request.RequestUri.ToString()));
@@ -63,8 +60,7 @@ namespace IPVerification.Services
             {
                 _logger.LogError($"Request to the microservice unauthorized with reason phrase {response.ReasonPhrase}");
                 throw new UnauthorizedAccessException($"Request to the microservice Unauthorized with reason phrase: {response.ReasonPhrase}");
-            }           
-
+            }
             return response;
         }
     }

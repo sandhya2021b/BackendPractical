@@ -8,9 +8,7 @@ namespace IPVerification.Services.GeoIPService
         private readonly IConfiguration _configuration;
         private readonly GeoIPServiceConfiguration _geoIPServiceConfiguration;
         private readonly ILogger<GeoIPService> _logger;
-        public GeoIPService(IConfiguration configuration,
-            System.Net.Http.HttpClient client, 
-            ILogger<GeoIPService> logger) : base(client, logger)
+        public GeoIPService(IConfiguration configuration, HttpClient client, ILogger<GeoIPService> logger) : base(client, logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

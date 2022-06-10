@@ -1,7 +1,6 @@
 ﻿using IPVerification.Services;
 using IPVerification.Services.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace IPVerification.Controllers
 {
@@ -10,7 +9,6 @@ namespace IPVerification.Controllers
     public class IPVerificationController : ControllerBase
     {
         private readonly IIPVerificationService _ipVerificationService;
-
         public IPVerificationController(IIPVerificationService iPVerificationService)
         {
             _ipVerificationService = iPVerificationService ?? throw new ArgumentNullException(nameof(iPVerificationService));

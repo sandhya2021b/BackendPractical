@@ -1,5 +1,4 @@
 ﻿using Polly;
-using Newtonsoft.Json;
 
 namespace ReverseDnsService.API
 {
@@ -13,7 +12,6 @@ namespace ReverseDnsService.API
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         protected async Task<string> Get(string endpoint, string token = null)
         {
             try
@@ -38,7 +36,6 @@ namespace ReverseDnsService.API
                     $"- Exception {ex.Message} - Inner exception {ex.InnerException?.Message}");
                 throw;
             }
-
             return null;
         }
         private Uri GetRequestUrl(string endpoint)
@@ -52,7 +49,6 @@ namespace ReverseDnsService.API
                 return new Uri(_client.BaseAddress + endpoint);
             }
         }
-
         private async Task<HttpResponseMessage> Execute(HttpRequestMessage request, string token = null)
         {
             request.SetPolicyExecutionContext(new Context(request.RequestUri.ToString()));
@@ -69,7 +65,6 @@ namespace ReverseDnsService.API
                 throw new UnauthorizedAccessException($"Request to the microservice Unauthorized with " +
                     $"reason phrase: {response.ReasonPhrase}");
             }
-
             return response;
         }
     }

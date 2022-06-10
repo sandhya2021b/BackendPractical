@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReverseDnsService.API.Services.HackerTarget;
 using ReverseDnsService.API.Services.Models;
-using System.Net;
 
 namespace ReverseDnsService.API.Controllers
 {
@@ -38,6 +36,5 @@ namespace ReverseDnsService.API.Controllers
 
             return Ok(response);
         }
-
     }
 }
