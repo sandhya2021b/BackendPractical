@@ -39,7 +39,7 @@ namespace IPVerification.Controllers
                     Errors = new List<ErrorModel> { new ErrorModel { Message = "Invalid input IP Address" } }
                 });            
 
-            if (!string.IsNullOrEmpty(input.DomainName) && !_ipVerificationService.IsValidDomainName(input.DomainName).Result)
+            if (!string.IsNullOrEmpty(input.DomainName) && !_ipVerificationService.IsValidDomainName(input.DomainName))
                 return BadRequest(new ErrorResponse
                 {
                     Errors = new List<ErrorModel> { new ErrorModel { Message = "Invalid input domain name" } }

@@ -1,5 +1,7 @@
 ﻿using ReverseDnsService.API.Configuration;
 using ReverseDnsService.API.Services.Models;
+using System.Net;
+using System.Net.Sockets;
 
 namespace ReverseDnsService.API.Services.HackerTarget
 {
@@ -15,6 +17,38 @@ namespace ReverseDnsService.API.Services.HackerTarget
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _hackerTargetServiceServiceConfiguration = _configuration.GetSection("ServicesConfiguration:HackerTargetServiceConfiguration").Get<HackerTargetServiceConfiguration>();
+        }
+        public async Task<bool> IsValidIpAddress(string ipAddress)
+        {
+            bool flag = false;
+            try
+            {
+                string IPv = string.Empty;
+                IPAddress address;
+                if (!string.IsNullOrEmpty(ipAddress))
+                {
+                    if (ipAddress.Count(c => c == '.') == 3)
+                    {
+                        flag = IPAddress.TryParse(ipAddress, out address);
+                        IPv = "IPv4";
+                    }
+                    else if (ipAddress.Contains(':'))
+                    {
+                        if (IPAddress.TryParse(ipAddress, out address))
+                        {
+                            flag = address.AddressFamily == AddressFamily.InterNetworkV6;
+                        }
+                        IPv = "IPv6";
+                    }
+                    else
+                    {
+                        IPv = "Version of";
+                        flag = false;
+                    }
+                }
+            }
+            catch (Exception) { }
+            return flag;
         }
         public async Task<DNSResponse> GetDnsFromHackerTarget(string ipAddress)
         {

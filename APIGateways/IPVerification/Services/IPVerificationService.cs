@@ -55,9 +55,27 @@ namespace IPVerification.Services
             return flag;
         }
 
-        public async Task<bool> IsValidDomainName(string domainName)
+        public bool IsValidDomainName(string domainName)
         {
-            return Uri.CheckHostName(domainName) != UriHostNameType.Unknown;
+            bool isDomainExist = false;
+            System.Net.IPHostEntry host;
+            try
+            {
+                host = System.Net.Dns.GetHostEntry(domainName);
+                if (host != null)
+                {
+                    isDomainExist = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Host not exists")
+                {
+                    isDomainExist = false;
+                }
+            }
+
+            return isDomainExist;
         }
         public async Task<VerificationResponseModel> GetIpDetails(string ipAddress, string domainName)
         {
