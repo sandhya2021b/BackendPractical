@@ -16,11 +16,24 @@ namespace ReverseDnsService.API.Controllers
             _hackertargetService = hackertargetService ?? throw new ArgumentNullException(nameof(hackertargetService));
         }
 
+        /// <summary>
+        /// Gets details of DNS for given IpAddress
+        /// </summary>
+        /// <param name="IP Address">IP Address as string</param>
+        /// <response code="200">Gets DNS details for given IpAddress</response>
+        /// <response code="400">Failed to fetch DNS details for the input provided</response>
         [HttpGet("/{ip}")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(DNSResponse), statusCode:200)]
+        [ProducesResponseType(typeof(ErrorResponse), statusCode:400)]
         public async Task<ActionResult<DNSResponse>> GetRevernseDNS([FromRoute] string ip)
-        { 
+        {
+            if (!string.IsNullOrEmpty(ip) && !_hackertargetService.IsValidIpAddress(ip).Result)
+                return BadRequest(new ErrorResponse
+                {
+                    Errors = new List<ErrorModel> { new ErrorModel { Message = "Invalid input IP Address" } }
+                });
+
             var response = await _hackertargetService.GetDnsFromHackerTarget(ip);
 
             return Ok(response);
