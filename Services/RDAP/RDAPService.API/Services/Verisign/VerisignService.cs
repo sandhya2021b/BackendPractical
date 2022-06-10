@@ -8,9 +8,7 @@ namespace RDAPService.API.Services.Verisign
         private readonly IConfiguration _configuration;
         private readonly VerisignServiceConfiguration _verisignServiceConfiguration;
         private readonly ILogger<VerisignService> _logger;
-        public VerisignService(IConfiguration configuration,
-            System.Net.Http.HttpClient client,
-            ILogger<VerisignService> logger) : base(client, logger)
+        public VerisignService(IConfiguration configuration, HttpClient client, ILogger<VerisignService> logger) : base(client, logger)
         { 
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

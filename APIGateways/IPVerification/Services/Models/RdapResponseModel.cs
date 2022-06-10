@@ -18,7 +18,6 @@
     {
         public bool DelegationSigned { get; set; }
     }
-
     public class Link
     {
         public string Value { get; set; }
@@ -26,7 +25,6 @@
         public string Href { get; set; }
         public string Type { get; set; }
     }
-
     public class Entity
     {
         public string ObjectClassName { get; set; }
@@ -36,7 +34,6 @@
         public List<object> VcardArray { get; set; }
         public List<Entity> Entities { get; set; }
     }
-
     public class Publicid
     {
         public string Type { get; set; }
@@ -47,13 +44,11 @@
         public string EventAction { get; set; }
         public DateTime EventDate { get; set; }
     }
-
     public class Nameserver
     {
         public string ObjectClassName { get; set; }
         public string LdhName { get; set; }
     }
-
     public class Notice
     {
         public string Title { get; set; }

@@ -5,15 +5,14 @@ namespace RDAPService.API
 {
     public abstract class HttpService
     {
-        private readonly System.Net.Http.HttpClient _client;
+        private readonly HttpClient _client;
         private readonly ILogger<HttpService> _logger;
 
-        public HttpService(System.Net.Http.HttpClient client, ILogger<HttpService> logger)
+        public HttpService(HttpClient client, ILogger<HttpService> logger)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-
         protected async Task<T> Get<T>(string endpoint, string token = null)
         {
             try
@@ -52,7 +51,6 @@ namespace RDAPService.API
                 return new Uri(_client.BaseAddress + endpoint);
             }
         }
-
         private async Task<HttpResponseMessage> Execute(HttpRequestMessage request, string token = null)
         {
             request.SetPolicyExecutionContext(new Context(request.RequestUri.ToString()));
@@ -69,7 +67,6 @@ namespace RDAPService.API
                 throw new UnauthorizedAccessException($"Request to the microservice Unauthorized with " +
                     $"reason phrase: {response.ReasonPhrase}");
             }
-
             return response;
         }
     }
